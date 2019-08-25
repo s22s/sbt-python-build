@@ -32,7 +32,7 @@ import sbtassembly.AssemblyPlugin
 import sbtassembly.AssemblyPlugin.autoImport.assembly
 
 object PythonBuildPlugin extends AutoPlugin {
-  override def trigger: PluginTrigger = allRequirements
+  override def trigger: PluginTrigger = noTrigger
   override def requires = AssemblyPlugin
 
   object autoImport {
