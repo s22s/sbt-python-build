@@ -60,7 +60,7 @@ object PythonBuildPlugin extends AutoPlugin {
     val asmbl = (Compile / assembly).value
     val dest = buildDir / "deps" / "jars" / asmbl.getName
     IO.copyFile(asmbl, dest)
-    log.info(s"PyRasterFrames assembly written to '$dest'")
+    log.info(s"Python assembly written to '$dest'")
     dest
   }.dependsOn(copyPySources)
 
@@ -96,7 +96,7 @@ object PythonBuildPlugin extends AutoPlugin {
       val cmd = Seq(pythonCommand.value, "setup.py") ++ args
       val ver = version.value
       s.log.info(s"Running '${cmd.mkString(" ")}' in '$wd'")
-      val ec = Process(cmd, wd, "RASTERFRAMES_VERSION" -> ver).!
+      val ec = Process(cmd, wd, "PROJECT_VERSION" -> ver).!
       if (ec != 0)
         throw new MessageOnlyException(s"'${cmd.mkString(" ")}' exited with value '$ec'")
       ec
@@ -110,7 +110,7 @@ object PythonBuildPlugin extends AutoPlugin {
         case TestResult.Passed =>
           (Python / executeTests).value
         case _ ⇒
-          val pySummary = Summary("pyrasterframes", "tests skipped due to scalatest failures")
+          val pySummary = Summary("Python Build", "tests skipped due to scalatest failures")
           standard.copy(summaries = standard.summaries ++ Iterable(pySummary))
       }
     }
@@ -148,9 +148,9 @@ object PythonBuildPlugin extends AutoPlugin {
           case 4 ⇒ "PyTest usage error."
           case 5 ⇒ "No Python tests found."
           case x if x != 0 ⇒ "Unknown error while running Python tests."
-          case _ ⇒ "PyRasterFrames tests successfully completed."
+          case _ ⇒ "Tests successfully completed."
         }
-        val pySummary = Summary("pyrasterframes", msg)
+        val pySummary = Summary("Python Build", msg)
         // Would be cool to derive this from the python output...
         val result = if (resultCode == 0) {
           new SuiteResult(
